@@ -14,64 +14,66 @@ import org.springframework.stereotype.Component;
 
 import com.smacker.bean.Commodity;
 import com.smacker.dao.CommodityDao;
-public class CommodityDaoImpl implements CommodityDao{
-		private HibernateTemplate hibernateTemplate;
 
-		@Override
-		public boolean saveCommodity(Commodity cmdty){
+public class CommodityDaoImpl implements CommodityDao {
+	private HibernateTemplate hibernateTemplate;
+
+	@Override
+	public boolean saveCommodity(Commodity cmdty) {
+		try {
+			hibernateTemplate.save(cmdty);
+			return true;
+		} catch (DataAccessException e) {
+			System.out.println("在CommodityImpl中，保存Commodity时出现异常");
+			return false;
+		}
+	}
+
+	@Override
+		public boolean updateCommodity(Commodity cmdty){
 				try{
-						hibernateTemplate.save(cmdty);
+						hibernateTemplate.update(cmdty);
 						return true;
 				}catch(DataAccessException e){
-						System.out.println("在CommodityImpl中，保存Commodity时出现异常");
+						System.out.println("在Commodityimpl中,更新commodity时出现异常");
 						return false;
 				}
 		}
 
-		@Override
-		public boolean updateCommodity(Commodity cmdty){
-				try{
-						hibernateTemplate.update(cmdty);
-						reutrn true;n
-				}catch(DataAccessException e){
-						System.out.println("在Commodityimpl中,更新commodity时出现异常");
-				}
-		}
-
-		@Override
-		public deleteCommodity(String cmdtyId){
-				try {
+	@Override
+	public boolean deleteCommodity(String cmdtyId) {
+		try {
 			return hibernateTemplate.execute(new HibernateCallback<Boolean>() {
 				@Override
 				public Boolean doInHibernate(Session session) throws HibernateException, SQLException {
 					String hql = "delete Commodity where commodityId=?";
 					Query q = session.createQuery(hql);
-					q.setParameter("userId", userId);
+					q.setParameter("commodityId", cmdtyId);
 					q.executeUpdate();
 					return false;
 				}
 
 			});
 		} catch (Exception e) {
-System.out.println("在CommodityImpl中，删除用户信息时出现异常！");
+			System.out.println("在CommodityImpl中，删除用户信息时出现异常！");
 			e.printStackTrace();
 			return false;
-			}
 		}
+	}
 
-		@Override
-		public Commodity getCommodityInId(String cmdtyId){
-				return hibernateTemplate.get(Commodity.class,cmdtyId);
-		}
+	@Override
+	public Commodity getCommodityInId(String cmdtyId) {
+		return hibernateTemplate.get(Commodity.class, cmdtyId);
+	}
 
-		@Override
+	@Override
 		public Commodity getCommodity(Commodity cmty){
 				//调用getCommodityInId(String);
-				reutrn getCommodityInId(cmty);
+				return getCommodityInId(cmty.getCommodityId());
 		}
-		
-		@Resource(name="hibernateTemplate")
-		public void setHibernateTemplate(HibernateTemplate hibernateTemplate){
-				this.hibernateTemplate = hibernateTemplate;
-		}
+
+	@Resource(name = "hibernateTemplate")
+	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
+		this.hibernateTemplate = hibernateTemplate;
+	}
 }
