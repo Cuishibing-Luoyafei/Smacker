@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.smacker.bean.Commodity;
 import com.smacker.dao.CommodityDao;
 
+@Component("commodityDao")
 public class CommodityDaoImpl implements CommodityDao {
 	private HibernateTemplate hibernateTemplate;
 
@@ -24,7 +25,6 @@ public class CommodityDaoImpl implements CommodityDao {
 			hibernateTemplate.save(cmdty);
 			return true;
 		} catch (DataAccessException e) {
-			System.out.println("在CommodityImpl中，保存Commodity时出现异常");
 			return false;
 		}
 	}
