@@ -22,6 +22,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean saveUser(User user) {
+		if(user==null) return false;
 		try {
 			hibernateTemplate.save(user);
 			return true;
@@ -34,6 +35,7 @@ System.out.println("在UserDaoImpl中，保存用户信息时出现异常！");
 
 	@Override
 	public boolean updateUser(User user) {
+		if(user==null) return false;
 		try {
 			hibernateTemplate.update(user);
 			return true;
@@ -46,6 +48,7 @@ System.out.println("在UserDaoImpl中，更新用户信息时出现异常！");
 
 	@Override
 	public boolean deleteUser(final String userId) {
+		if(userId==null||userId.equals("")) return false;
 		try {
 			return hibernateTemplate.execute(new HibernateCallback<Boolean>() {
 				@Override
@@ -67,6 +70,7 @@ System.out.println("在UserDaoImpl中，删除用户信息时出现异常！");
 
 	@Override
 	public User getUserInId(String userId) {
+		if(userId==null||userId.equals("")) return null;
 		
 		return	hibernateTemplate.get(User.class, userId);
 		/*try {
